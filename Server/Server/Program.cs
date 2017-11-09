@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Server
 {
@@ -18,8 +18,11 @@ namespace Server
 
         private static TcpListener _server;
 
+        public static BinaryFormatter biform = new BinaryFormatter();
+
         static void Main(string[] args)
         {
+            XmlHandler.Write();
             Console.WriteLine("Server");
             Console.WriteLine("Waiting for connection");
             TcpServer(_port);
@@ -49,6 +52,7 @@ namespace Server
         public static void HandleClient(object obj)
         {
             TcpClient client = (TcpClient)obj;
+
             StreamReader sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
@@ -56,6 +60,13 @@ namespace Server
 
             IPEndPoint endPoint = (IPEndPoint)client.Client.RemoteEndPoint;
             IPEndPoint localEndpoint = (IPEndPoint)client.Client.LocalEndPoint;
+
+            //First information from server
+            ServerGlobals.playerList.Add(new PlayerStruct(0, 0, false, client));
+
+            byte[] temp = File.ReadAllBytes("FloofDoc");
+            client.GetStream().Write(temp, 0, temp.Length);
+            client.GetStream().Flush();
 
             while (client.Connected)
             {
@@ -65,6 +76,7 @@ namespace Server
                 }
                 catch
                 {
+                    
                     Console.WriteLine("Client onport " + endPoint.Port.ToString() + " has gone away.");
                     Thread.CurrentThread.Abort();
                 }
@@ -72,7 +84,6 @@ namespace Server
                 {
                     Console.WriteLine(sData);
                 }
-                sWriter.WriteLine("Welcome aboard");
                 sWriter.Flush();
             }
         }
