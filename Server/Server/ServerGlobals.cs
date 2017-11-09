@@ -28,6 +28,7 @@ namespace Server
             Console.Write("Turn time: ");
             time = int.Parse(Console.ReadLine());
             map = new char[xDimension, yDimension];
+            XmlHandler.WriteMap();
             playerList = new List<PlayerStruct>();
         }
 

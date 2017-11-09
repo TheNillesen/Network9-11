@@ -75,8 +75,7 @@ namespace Server
                     sData = sReader.ReadLine();
                 }
                 catch
-                {
-                    
+                {                    
                     Console.WriteLine("Client onport " + endPoint.Port.ToString() + " has gone away.");
                     Thread.CurrentThread.Abort();
                 }

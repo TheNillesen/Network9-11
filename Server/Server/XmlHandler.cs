@@ -28,5 +28,20 @@ namespace Server
             }
             xDoc.Save("FloofDoc");
         }
+
+        static public void WriteMap()
+        {
+            XmlDocument xDoc = new XmlDocument();
+
+            var head = xDoc.AppendChild(xDoc.CreateElement("Map"));
+
+            XmlElement ele = xDoc.CreateElement("Fluuf");
+            var xD = ele.AppendChild(xDoc.CreateElement("xDimension"));
+            xD.InnerText = ServerGlobals.xDimension.ToString();
+            var yD = ele.AppendChild(xDoc.CreateElement("yDimension"));
+            yD.InnerText = ServerGlobals.yDimension.ToString();
+
+            xDoc.Save("MapInfo");
+        }
     }
 }
